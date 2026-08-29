@@ -1,6 +1,6 @@
 # Linux Whisper Dictation
 
-A local voice-to-text tool for Linux. Press a hotkey, speak, and it types what you said at your cursor — in any app (browser, editor, terminal, etc.).
+A local voice-to-text tool for Linux. `Press and hold a hotkey, speak, release hotkey and it types what you said at your cursor` - Any app (browser, editor, terminal, etc.).
 
 Works on both X11 and Wayland (including GNOME).
 
