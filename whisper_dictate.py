@@ -60,6 +60,10 @@ def save_default_config():
 
 config = load_config()
 
+# Long dictations can take more than ten seconds for ydotool to emit because
+# it sends individual keyboard events for every character.
+YDOTOOL_TYPE_TIMEOUT = 60
+
 # ============ Input Simulation ============
 
 def detect_input_method():
@@ -130,7 +134,7 @@ def type_text(text, method=None):
         elif method == "ydotool":
             subprocess.run(
                 ["ydotool", "type", "--", text],
-                check=True, timeout=10
+                check=True, timeout=YDOTOOL_TYPE_TIMEOUT
             )
         elif method == "wtype":
             subprocess.run(
@@ -148,8 +152,9 @@ def type_text(text, method=None):
 def _type_via_clipboard(text):
     """Type text by copying to clipboard and simulating paste."""
     session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
+    is_wayland = session_type == "wayland" or bool(os.environ.get("WAYLAND_DISPLAY"))
     try:
-        if session_type == "wayland":
+        if is_wayland:
             subprocess.run(["wl-copy", "--", text], check=True, timeout=5)
             # ydotool key: Ctrl(29) down, V(47) down, V up, Ctrl up
             subprocess.run(
